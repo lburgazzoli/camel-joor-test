@@ -1,18 +1,16 @@
 package com.github.lburgazzoli;
 
-import java.io.InputStream;
-import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import org.apache.camel.builder.RouteBuilder;
 import org.joor.Reflect;
 
 public class JoorTest {
     public static void main(String[] args) throws Exception {
-        try (InputStream in = JoorTest.class.getResourceAsStream("/WithCustomProcessor.java")) {
-            String source = new Scanner(in, "UTF-8").useDelimiter("\\A").next();
-            RouteBuilder builder = Reflect.compile("com.example.WithCustomProcessor", source).create().get();
+        String data = Files.readString(Path.of("data/MyData.java"));
+        String route = Files.readString(Path.of("data/MyRoutes.java"));
 
-            builder.configure();
-        }
+        Reflect.compile("my.example.MyData", data).create().get();
+        Reflect.compile("my.example.MyRoutes", route).create().get();
     }
 }
